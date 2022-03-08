@@ -102,16 +102,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       onTap: (){launch("https://www.ssbwiki.com");},)
                     ],
                   ),
-                  TextButton(onPressed: (){
-                    launch("https://www.paypal.com/donate/?business=S69WTHC7R7TNS&no_recurring=0&item_name=Thanks+for+your+support%21&currency_code=USD");
-                  },
-                    child:const Card(
-                      color: Colors.black,
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text("PayPal donation",style: TextStyle(color: Colors.white),),
-                      ),),
-                  )
                 ]
               );
             },
