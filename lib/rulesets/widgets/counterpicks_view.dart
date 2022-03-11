@@ -19,8 +19,6 @@ class _CounterpicksViewState extends State<CounterpicksView> {
   @override
   void initState(){
     super.initState();
-    // SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]);
-    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   }
 
   @override
@@ -40,15 +38,25 @@ class _CounterpicksViewState extends State<CounterpicksView> {
         backgroundColor: Colors.transparent,
       ),
     );
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height - _appBar.preferredSize.height;
-
+    
+    return Container(child: SafeArea(
+      child: extracted_scaffold(context, _appBar),
+      bottom: false,
+    ),
+      color: Colors.brown,
+    );
+    
+  }
+  Scaffold extracted_scaffold(BuildContext context, PreferredSizeWidget _appBar) {
+    double width = MediaQuery.of(context).size.width - (MediaQuery.of(context).padding.left + MediaQuery.of(context).padding.right);
+    double height = MediaQuery.of(context).size.height - (_appBar.preferredSize.height + MediaQuery.of(context).padding.top + MediaQuery.of(context).padding.bottom);
+    
     double starterStageWidth = (width/5);
     double counterStageWidth = ((width/8) * 3) + 8;
-
+    
     List<Stage> starters = widget.ruleset.starters;
     List<Stage> counterpicks = widget.ruleset.counterpicks;
-
+    
     return Scaffold(
       backgroundColor: Colors.brown,
       appBar: _appBar,

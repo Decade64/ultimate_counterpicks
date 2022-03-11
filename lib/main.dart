@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Ruleset ruleset = Ruleset(0, "", [], [], Legality.legal);
     Future<List<Ruleset>> rulesetListFuture = ruleset.rulesetList;
     List<Ruleset> rulesetList = [];
-    Stream<List<Ruleset>> stream = Stream<List<Ruleset>>.periodic(const Duration(milliseconds: 100),(count){
+    Stream<List<Ruleset>> stream = Stream<List<Ruleset>>.periodic(Duration.zero,(count){
       if(reloadBool){
         Future.delayed(const Duration(milliseconds: 100),(){
           setState(() {
@@ -109,11 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const RulesetCreator())).then((value){
-                setState(() {
-                  reloadBool = true;
-                });
-              });
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const RulesetCreator()));
             },
           ),
         ],
@@ -137,10 +133,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: (){
-                        ruleset.deleteRuleset(index);
-                        Future.delayed(const Duration(milliseconds: 100),(){
+                        Future.delayed(Duration.zero,(){
+                          ruleset.deleteRuleset(index);
                           setState(() {
                           });
+                          ruleset.renameRulesets;
                         });
                       },
                     ),

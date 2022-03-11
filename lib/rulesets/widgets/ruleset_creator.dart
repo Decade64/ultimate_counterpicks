@@ -79,14 +79,31 @@ late TextEditingController _controller;
                         ListTile(
                           trailing: IconButton(icon: const Icon(Icons.add,color: Colors.black,),
                             onPressed: () {
-                              showDialog(
+                              showGeneralDialog(
                                   context: context,
-                                  builder: (context) => ReloadAccess().starterStagePopup(context, readRuleset,height,width,(ruleset){
-                                    setState(() {
-                                      readRuleset = ruleset;
-                                    });
-                                  })
-                              );
+                                  pageBuilder: (context,anim1,anim2){return Center();},
+                                  transitionBuilder: (context,a1,a2,widget){
+                                    return Transform.scale(
+                                      scale: a1.value,
+                                      child: Opacity(
+                                        opacity: a1.value,
+                                        child: ReloadAccess().starterStagePopup(context, readRuleset,height,width, (ruleset){
+                                          setState(() {
+                                            readRuleset = ruleset;
+                                          });
+                                        }),
+                                      ),
+                                    );
+                                  },
+                                  );
+                              // showDialog(
+                              //     context: context,
+                              //     builder: (context) => ReloadAccess().starterStagePopup(context, readRuleset,height,width,(ruleset){
+                              //       setState(() {
+                              //         readRuleset = ruleset;
+                              //       });
+                              //     })
+                              // );
                             },
                           ),
                           title: const Text("Starters"),)
@@ -129,14 +146,31 @@ late TextEditingController _controller;
                           ListTile(
                             trailing: IconButton(icon: const Icon(Icons.add,color: Colors.black,),
                               onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => ReloadAccess().counterpickStagePopup(context, readRuleset,height,width,(ruleset){
-                                      setState(() {
-                                        readRuleset = ruleset;
-                                      });
-                                    })
+                                showGeneralDialog(
+                                  context: context,
+                                  pageBuilder: (context,anim1,anim2){return Center();},
+                                  transitionBuilder: (context,a1,a2,widget){
+                                    return Transform.scale(
+                                      scale: a1.value,
+                                      child: Opacity(
+                                        opacity: a1.value,
+                                        child: ReloadAccess().counterpickStagePopup(context, readRuleset,height,width, (ruleset){
+                                          setState(() {
+                                            readRuleset = ruleset;
+                                          });
+                                        }),
+                                      ),
+                                    );
+                                  },
                                 );
+                                // showDialog(
+                                //     context: context,
+                                //     builder: (context) => ReloadAccess().counterpickStagePopup(context, readRuleset,height,width,(ruleset){
+                                //       setState(() {
+                                //         readRuleset = ruleset;
+                                //       });
+                                //     })
+                                // );
                               },
                             ),
                             title: const Text("Counterpicks"),)
@@ -173,6 +207,7 @@ late TextEditingController _controller;
                   onPressed: readRuleset.starters.length != 5 || readRuleset.counterpicks.isEmpty || readRuleset.name == "" || readRuleset.containsDuplicates? null : (){
                       Future.delayed(Duration.zero,()async{
                         readRuleset.manualWriteRuleset(readRuleset);
+                        readRuleset.renameRulesets;
                         reloadBool = true;
                       });
                       Navigator.pop(context);
@@ -301,7 +336,7 @@ class ReloadAccess{
 
 
     return AlertDialog(
-      insetPadding: EdgeInsets.zero,
+      insetPadding: const EdgeInsets.only(top: 50,bottom: 50),
       scrollable: true,
       content: Column(
         children: columnWidgets,
@@ -407,10 +442,6 @@ class ReloadAccess{
                     function(newRuleset);
                     Navigator.of(context).pop();
                   }
-                  // Ruleset newRuleset = ruleset;
-                  // newRuleset.starters.add(getLegalStage(element));
-                  // function(newRuleset);
-                  // Navigator.of(context).pop();
                 }, icon: const Icon(Icons.add))
               ],
             )
@@ -425,7 +456,7 @@ class ReloadAccess{
     }
 
     return AlertDialog(
-      insetPadding: EdgeInsets.zero,
+      insetPadding: const EdgeInsets.only(top: 50,bottom: 50),
       scrollable: true,
       content: Column(
         children: columnWidgets,
