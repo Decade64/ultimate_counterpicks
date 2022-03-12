@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
       });
       reloadBool = false;
       return rulesetList;
-    });
+    }).asBroadcastStream();
 
     return Scaffold(
       appBar: AppBar(
@@ -118,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: StreamBuilder<List<Ruleset>>(
           stream: stream,
           builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.active){
+            if(snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.waiting){
               if(snapshot.data!.isEmpty){
                 return const Center(
                   child: Text("No rulesets found, please add one using the '+' icon"),
@@ -135,9 +135,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: (){
                         Future.delayed(Duration.zero,(){
                           ruleset.deleteRuleset(index);
-                          setState(() {
-                          });
                           ruleset.renameRulesets;
+                          reloadBool = true;
                         });
                       },
                     ),
