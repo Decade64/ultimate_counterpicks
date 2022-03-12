@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Ruleset ruleset = Ruleset(0, "", [], [], Legality.legal);
     Future<List<Ruleset>> rulesetListFuture = ruleset.rulesetList;
     List<Ruleset> rulesetList = [];
-    Stream<List<Ruleset>> stream = Stream<List<Ruleset>>.periodic(Duration.zero,(count){
+    Stream<List<Ruleset>> stream = Stream<List<Ruleset>>.periodic(const Duration(milliseconds: 100),(count){
       if(reloadBool){
         Future.delayed(const Duration(milliseconds: 100),(){
           setState(() {
@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
       });
       reloadBool = false;
       return rulesetList;
-    }).asBroadcastStream();
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -109,7 +109,11 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const RulesetCreator()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const RulesetCreator())).then((value){
+                setState(() {
+                  reloadBool = true;
+                });
+              });
             },
           ),
         ],
@@ -118,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: StreamBuilder<List<Ruleset>>(
           stream: stream,
           builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.waiting){
+            if(snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.active){
               if(snapshot.data!.isEmpty){
                 return const Center(
                   child: Text("No rulesets found, please add one using the '+' icon"),
@@ -133,10 +137,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: (){
-                        Future.delayed(Duration.zero,(){
-                          ruleset.deleteRuleset(index);
-                          ruleset.renameRulesets;
-                          reloadBool = true;
+                        ruleset.deleteRuleset(index);
+                        Future.delayed(const Duration(milliseconds: 100),(){
+                          setState(() {
+                          });
                         });
                       },
                     ),
