@@ -85,7 +85,7 @@ bool get containsDuplicates{
   //Get file from index
   Future<File> _rulesetIndexFile(int index) async{
     final path = await _rulesetDocumentDirectory;
-    return File("${path + "/" + index.toString()}.json");
+    return File("${path + index.toString()}.json");
   }
 
     //Read/write
@@ -100,6 +100,7 @@ bool get containsDuplicates{
       final file = await writeRuleset;
       return file.writeAsString(jsonEncode(ruleset));
     }
+    ruleset.id = ruleset.id + 1;
     final file = await _rulesetIndexFile(newFileId);
     return file.writeAsString(jsonEncode(ruleset));
   }
@@ -172,9 +173,9 @@ Future<Ruleset> readIndexRuleset(int index) async{
   }
   //Delete
   Future deleteRuleset(int index)async{
+    renameRulesets;
     final file = await _rulesetIndexFile(index);
     file.delete();
-    renameRulesets;
   }
 
   Future get renameRulesets async {
