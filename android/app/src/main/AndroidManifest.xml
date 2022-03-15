@@ -2,7 +2,7 @@
     package="com.decade.ultimate_counterpicks">
    <application
         android:label="UCP"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:exported="true"
             android:name=".MainActivity"
