@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:ultimate_counterpicks/rulesets/classes/ruleset.dart';
 import 'package:flutter/services.dart';
@@ -52,7 +54,7 @@ class _CounterpicksViewState extends State<CounterpicksView> {
     double height = MediaQuery.of(context).size.height - (_appBar.preferredSize.height + MediaQuery.of(context).padding.top + MediaQuery.of(context).padding.bottom);
     
     double starterStageWidth = (width/5);
-    double counterStageWidth = ((width/8) * 3) + 8;
+    double counterStageWidth = ((width/3.7));
     
     List<Stage> starters = widget.ruleset.starters;
     List<Stage> counterpicks = widget.ruleset.counterpicks;
@@ -80,7 +82,7 @@ class _CounterpicksViewState extends State<CounterpicksView> {
                   ),
                   SizedBox(
                     width: starterStageWidth * starters.length,
-                    height: (height * 2)/8,
+                    height: (height/2.5) - 10,
                     child:ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: starters.length,
@@ -131,7 +133,7 @@ class _CounterpicksViewState extends State<CounterpicksView> {
                   ),
                   SizedBox(
                     width: counterStageWidth * counterpicks.length,
-                    height: ((height * 4)/8) - 10,
+                    height: (height/2.5) - 10,
                     child:ListView.builder(
                         scrollDirection: Axis.horizontal,
                         physics: const NeverScrollableScrollPhysics(),
@@ -179,8 +181,39 @@ class _CounterpicksViewState extends State<CounterpicksView> {
             ],
           ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
+      floatingActionButton: Column(
+        children: [
+          Spacer(),
+          FloatingActionButton(
+              onPressed: (){
+                Random r = Random();
+                bool isHeads = r.nextBool();
+                String flipText = "";
+                switch(isHeads){
+                  case true: flipText = "Heads";
+                  break;
+                  case false: flipText = "Tails";
+                }
+                showDialog(context: context, builder: (context) => AlertDialog(
+                  content: Center(child: Text(flipText)),
+                  actions: [
+                    IconButton(
+                        onPressed: (){
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(Icons.close))
+                  ],
+                ));
+              },
+              child: Stack(
+                children: [
+                  Center(child: Icon(Icons.circle,color: Colors.grey,size: 40,)),
+                  Center(child: Text("¢")),
+                ],
+              ),
+              ),
+          FloatingActionButton(
+            onPressed: (){
               for (var stage in starters) {
                 stage.isBanned = false;
               }
@@ -188,9 +221,11 @@ class _CounterpicksViewState extends State<CounterpicksView> {
                 stage.isBanned = false;
               }
               setState(() {});
-        },
-        child: const Icon(Icons.refresh),
-        backgroundColor: Colors.green,
+            },
+            child: const Icon(Icons.refresh),
+            backgroundColor: Colors.green,
+          )
+        ],
       ),
     );
   }

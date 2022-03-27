@@ -26,7 +26,7 @@ Stage getLegalStage(LegalStagesEnum stage){
     case LegalStagesEnum.ps2:
       return Stage("PS2","stageImages/hazardsOff/Pokemon_Stadium_2.png",Legality.legal,false);
     case LegalStagesEnum.smashville:
-      return Stage("Smashville","stageImages/legal/Smashville.png", Legality.hazardsOn,false);
+      return Stage("Smashville","stageImages/legal/Smashville.jpg", Legality.hazardsOn,false);
     case LegalStagesEnum.townAndCity:
       return Stage("Town And City","stageImages/hazardsOff/Town_and_City.png",Legality.hazardsOn,false);
     case LegalStagesEnum.smallBattlefield:
