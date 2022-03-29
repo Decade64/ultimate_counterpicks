@@ -10,6 +10,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:animations/animations.dart';
 
 bool reloadBool = true;
+Ruleset ruleset = Ruleset(0, "", [], [], Legality.legal);
+Future<List<Ruleset>> rulesetListFuture = ruleset.rulesetList;
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,22 +64,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Ruleset ruleset = Ruleset(0, "", [], [], Legality.legal);
-    Future<List<Ruleset>> rulesetListFuture = ruleset.rulesetList;
-    List<Ruleset> rulesetList = [];
-    Stream<List<Ruleset>> stream = Stream<List<Ruleset>>.periodic(Duration.zero,(count){
-      if(reloadBool){
-        Future.delayed(const Duration(milliseconds: 100),(){
-          setState(() {
-          });
-        });
-      }
-      Future.delayed(Duration.zero,()async{
-        rulesetList = await rulesetListFuture;
-      });
-      reloadBool = false;
-      return rulesetList;
-    }).asBroadcastStream();
 
     return Scaffold(
       appBar: AppBar(
@@ -108,15 +94,21 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const RulesetCreator()));
+            onPressed: ()async{
+              Navigator.push<List<Ruleset>>(context, MaterialPageRoute(builder: (context) => const RulesetCreator())).then((value){
+                Future.delayed(const Duration(milliseconds: 50),(){
+                  setState(() {
+                    rulesetListFuture = ruleset.rulesetList;
+                  });
+                });
+              });
             },
           ),
         ],
       ),
       body: Center(
-        child: StreamBuilder<List<Ruleset>>(
-          stream: stream,
+        child: FutureBuilder<List<Ruleset>>(
+          future: rulesetListFuture,
           builder: (context, snapshot) {
             if(snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.waiting){
               if(snapshot.data!.isEmpty){
@@ -136,7 +128,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         Future.delayed(Duration.zero,(){
                           ruleset.deleteRuleset(index);
                           ruleset.renameRulesets;
-                          reloadBool = true;
+                          setState(() {
+                            rulesetListFuture = ruleset.rulesetList;
+                          });
                         });
                       },
                     ),

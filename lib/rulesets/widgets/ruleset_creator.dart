@@ -208,7 +208,7 @@ late TextEditingController _controller;
                       Future.delayed(Duration.zero,()async{
                         readRuleset.manualWriteRuleset(readRuleset);
                         readRuleset.renameRulesets;
-                        reloadBool = true;
+                        rulesetListFuture = ruleset.rulesetList;
                       });
                       Navigator.pop(context);
                   }
