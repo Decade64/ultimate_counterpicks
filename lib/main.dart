@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+
+
 import 'package:ultimate_counterpicks/rulesets/classes/legality.dart';
 import 'package:ultimate_counterpicks/rulesets/classes/ruleset.dart';
 import 'package:ultimate_counterpicks/rulesets/widgets/counterpicks_view.dart';
+import 'package:ultimate_counterpicks/rulesets/widgets/qr_reader.dart';
 import 'package:ultimate_counterpicks/rulesets/widgets/ruleset_creator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:animations/animations.dart';
@@ -64,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.brown,
@@ -93,6 +98,18 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           IconButton(
+            icon: const Icon(Icons.qr_code),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => QrReader())).then((value){
+                Future.delayed(Duration(milliseconds: 50),(){
+                  setState(() {
+                    rulesetListFuture = ruleset.rulesetList;
+                  });
+                });
+              });
+            }
+          ),
+          IconButton(
             icon: const Icon(Icons.add),
             onPressed: ()async{
               Navigator.push<List<Ruleset>>(context, MaterialPageRoute(builder: (context) => const RulesetCreator())).then((value){
@@ -112,8 +129,11 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context, snapshot) {
             if(snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.waiting){
               if(snapshot.data!.isEmpty){
-                return const Center(
-                  child: Text("No rulesets found, please add one using the '+' icon"),
+                return Container(
+                  width: (width/8)*7,
+                  child: const Center(
+                    child: Text("No rulesets found, please add one using the '+' icon, or scan one using the QR code icon",textAlign: TextAlign.center,),
+                  ),
                 );
               }
               return ListView.builder(itemBuilder: (context,index){
@@ -122,17 +142,44 @@ class _MyHomePageState extends State<MyHomePage> {
                 return Card(
                   child: ListTile(
                     title: Text(title),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: (){
-                        Future.delayed(Duration.zero,(){
-                          ruleset.deleteRuleset(index);
-                          ruleset.renameRulesets;
-                          setState(() {
-                            rulesetListFuture = ruleset.rulesetList;
-                          });
-                        });
-                      },
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: (){
+                            Future.delayed(Duration.zero,(){
+                              ruleset.deleteRuleset(index);
+                              ruleset.renameRulesets;
+                              setState(() {
+                                rulesetListFuture = ruleset.rulesetList;
+                              });
+                            });
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.qr_code),
+                          onPressed: (){
+                            showDialog(context: context, builder: (context) => AlertDialog(
+                              content: Container(
+                                  height: (width/4) * 3,
+                                  width: (width/4) * 3,
+                                  child: QrImage(
+                                    data: jsonEncode(ruleset),
+                                  ),
+                              ),
+                              actions: [
+                                IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            ));
+                          },
+                        )
+                      ],
                     ),
                     onTap: () {
                       SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]);

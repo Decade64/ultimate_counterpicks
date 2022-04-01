@@ -13,12 +13,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '2'
+    flutterVersionCode = '6'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '0.1.1'
+    flutterVersionName = '0.2.0'
 }
 
 apply plugin: 'com.android.application'
@@ -50,7 +50,7 @@ android {
 
     defaultConfig {
         applicationId "com.decade.ultimate_counterpicks"
-        minSdkVersion 16
+        minSdkVersion 20
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
