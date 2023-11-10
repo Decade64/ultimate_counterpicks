@@ -100,8 +100,8 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: const Icon(Icons.qr_code),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => QrReader())).then((value){
-                Future.delayed(Duration(milliseconds: 50),(){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const QrReader())).then((value){
+                Future.delayed(const Duration(milliseconds: 50),(){
                   setState(() {
                     rulesetListFuture = ruleset.rulesetList;
                   });
@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context, snapshot) {
             if(snapshot.connectionState == ConnectionState.done ){
               if(snapshot.data!.isEmpty){
-                return Container(
+                return SizedBox(
                   width: (width/8)*7,
                   child: const Center(
                     child: Text("No rulesets found, please add one using the '+' icon, or scan one using the QR code icon",textAlign: TextAlign.center,),
@@ -161,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           icon: const Icon(Icons.qr_code),
                           onPressed: (){
                             showDialog(context: context, builder: (context) => AlertDialog(
-                              content: Container(
+                              content: SizedBox(
                                   height: (width/4) * 3,
                                   width: (width/4) * 3,
                                   child: QrImageView(

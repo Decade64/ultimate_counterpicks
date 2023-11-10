@@ -32,7 +32,7 @@ class _CounterpicksViewState extends State<CounterpicksView> {
 
   @override
   Widget build(BuildContext context) {
-    PreferredSizeWidget _appBar = PreferredSize(
+    PreferredSizeWidget appBar = PreferredSize(
       preferredSize: const Size.fromHeight(30),
       child: AppBar(
         foregroundColor: Colors.white,
@@ -41,17 +41,16 @@ class _CounterpicksViewState extends State<CounterpicksView> {
       ),
     );
     
-    return Container(child: SafeArea(
-      child: extracted_scaffold(context, _appBar),
+    return Container(color: Colors.brown,child: SafeArea(
       bottom: false,
+      child: extracted_scaffold(context, appBar),
     ),
-      color: Colors.brown,
     );
     
   }
-  Scaffold extracted_scaffold(BuildContext context, PreferredSizeWidget _appBar) {
+  Scaffold extracted_scaffold(BuildContext context, PreferredSizeWidget appBar) {
     double width = MediaQuery.of(context).size.width - (MediaQuery.of(context).padding.left + MediaQuery.of(context).padding.right);
-    double height = MediaQuery.of(context).size.height - (_appBar.preferredSize.height + MediaQuery.of(context).padding.top + MediaQuery.of(context).padding.bottom);
+    double height = MediaQuery.of(context).size.height - (appBar.preferredSize.height + MediaQuery.of(context).padding.top + MediaQuery.of(context).padding.bottom);
     
     double starterStageWidth = (width/5);
     double counterStageWidth = ((width/3.7));
@@ -61,7 +60,7 @@ class _CounterpicksViewState extends State<CounterpicksView> {
     
     return Scaffold(
       backgroundColor: Colors.brown,
-      appBar: _appBar,
+      appBar: appBar,
       body:Center(
           child: ListView(
             shrinkWrap: true,
@@ -69,8 +68,8 @@ class _CounterpicksViewState extends State<CounterpicksView> {
             children: [
               Column(
                 children: [
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Card(
                         color: Colors.blue,
                         child: Padding(
@@ -183,7 +182,7 @@ class _CounterpicksViewState extends State<CounterpicksView> {
       ),
       floatingActionButton: Column(
         children: [
-          Spacer(),
+          const Spacer(),
           FloatingActionButton(
               onPressed: (){
                 Random r = Random();
@@ -205,7 +204,7 @@ class _CounterpicksViewState extends State<CounterpicksView> {
                   ],
                 ));
               },
-              child: Stack(
+              child: const Stack(
                 children: [
                   Center(child: Icon(Icons.circle,color: Colors.grey,size: 40,)),
                   Center(child: Text("¢")),
@@ -222,8 +221,8 @@ class _CounterpicksViewState extends State<CounterpicksView> {
               }
               setState(() {});
             },
-            child: const Icon(Icons.refresh),
             backgroundColor: Colors.green,
+            child: const Icon(Icons.refresh),
           )
         ],
       ),

@@ -81,7 +81,7 @@ late TextEditingController _controller;
                             onPressed: () {
                               showGeneralDialog(
                                   context: context,
-                                  pageBuilder: (context,anim1,anim2){return Center();},
+                                  pageBuilder: (context,anim1,anim2){return const Center();},
                                   transitionBuilder: (context,a1,a2,widget){
                                     return Transform.scale(
                                       scale: a1.value,
@@ -114,7 +114,7 @@ late TextEditingController _controller;
                               child: Row(
                                 children: [
                                   const Spacer(),
-                                  SizedBox(child: Text(element.stageName),width: stageItemWidth/2,),
+                                  SizedBox(width: stageItemWidth/2,child: Text(element.stageName),),
                                   const Spacer(),
                                   Image.asset(element.stageImgPath,width: stageItemWidth,),
                                   const Padding(padding: EdgeInsets.all(5)),
@@ -148,7 +148,7 @@ late TextEditingController _controller;
                               onPressed: () {
                                 showGeneralDialog(
                                   context: context,
-                                  pageBuilder: (context,anim1,anim2){return Center();},
+                                  pageBuilder: (context,anim1,anim2){return const Center();},
                                   transitionBuilder: (context,a1,a2,widget){
                                     return Transform.scale(
                                       scale: a1.value,
@@ -181,7 +181,7 @@ late TextEditingController _controller;
                                   child: Row(
                                     children: [
                                       const Spacer(),
-                                      SizedBox(child: Text(element.stageName),width: stageItemWidth/2,),
+                                      SizedBox(width: stageItemWidth/2,child: Text(element.stageName),),
                                       const Spacer(),
                                       Image.asset(element.stageImgPath,width: stageItemWidth,),
                                       const Padding(padding: EdgeInsets.all(5)),
@@ -203,7 +203,6 @@ late TextEditingController _controller;
             Card(
               child: Center(
                 child: TextButton(
-                  child: const Text("Save and Exit"),
                   onPressed: readRuleset.starters.length != 5 || readRuleset.counterpicks.isEmpty || readRuleset.name == "" || readRuleset.containsDuplicates? null : (){
                       Future.delayed(Duration.zero,()async{
                         readRuleset.manualWriteRuleset(readRuleset);
@@ -211,7 +210,8 @@ late TextEditingController _controller;
                         rulesetListFuture = ruleset.rulesetList;
                       });
                       Navigator.pop(context);
-                  }
+                  },
+                  child: const Text("Save and Exit")
                 ),
               ),
             )

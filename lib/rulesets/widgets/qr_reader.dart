@@ -6,6 +6,8 @@ import 'package:ultimate_counterpicks/main.dart';
 import 'package:ultimate_counterpicks/rulesets/classes/ruleset.dart';
 
 class QrReader extends StatefulWidget{
+  const QrReader({Key? key}) : super(key: key);
+
   @override
   State<QrReader> createState() => _QrReaderState();
 }
@@ -45,7 +47,7 @@ class _QrReaderState extends State<QrReader> {
             ruleset.manualWriteRuleset(ruleset);
             ruleset.renameRulesets;
             rulesetListFuture = ruleset.rulesetList;
-          Future.delayed(Duration(seconds: 1),(){
+          Future.delayed(const Duration(seconds: 1),(){
             goback();
           });
         });
@@ -55,7 +57,7 @@ class _QrReaderState extends State<QrReader> {
       appBar: appBar,
       body: Stack(
         children: [
-          Center(child: CircularProgressIndicator()),
+          const Center(child: CircularProgressIndicator()),
           QRView(
             key: qrKey,
             onQRViewCreated: onQRViewCreated,
