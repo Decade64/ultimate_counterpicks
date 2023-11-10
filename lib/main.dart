@@ -127,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: FutureBuilder<List<Ruleset>>(
           future: rulesetListFuture,
           builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.waiting){
+            if(snapshot.connectionState == ConnectionState.done ){
               if(snapshot.data!.isEmpty){
                 return Container(
                   width: (width/8)*7,
@@ -164,8 +164,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               content: Container(
                                   height: (width/4) * 3,
                                   width: (width/4) * 3,
-                                  child: QrImage(
+                                  child: QrImageView(
                                     data: jsonEncode(ruleset),
+                                    version: QrVersions.auto,
                                   ),
                               ),
                               actions: [

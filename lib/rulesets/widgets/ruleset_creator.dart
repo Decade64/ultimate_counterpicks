@@ -36,7 +36,7 @@ late TextEditingController _controller;
     double height = MediaQuery.of(context).size.height;
 
     double stageItemHeight = height/6;
-    double stageItemWidth = height/4;
+    double stageItemWidth = height/5;
 
 
     return Scaffold(
