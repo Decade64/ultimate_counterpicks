@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:ultimate_counterpicks/lists/default_rulesets.dart';
 
 
 import 'package:ultimate_counterpicks/rulesets/classes/legality.dart';
@@ -70,7 +71,51 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(child: Center(child: Text("Additional Options"),)),
+            ListTile(
+              title: const Text("Default Stagelists"),
+              onTap: () {
+                List<Ruleset> defaultRulesets = DefaultRulesets().rulesets;
+                showDialog(context: context, 
+                builder: ((context) {
+                  return AlertDialog(
+                    actions: [
+                      IconButton(
+                        onPressed: (){
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(Icons.close))
+                        ],
+                    content: SizedBox(
+                      height: height/2,
+                      width: width/2 ,
+                      child: ListView.builder(
+                        itemCount: defaultRulesets.length,
+                        itemBuilder: ((context, index) {
+                          return ListTile(
+                            title: Text(defaultRulesets[index].name),
+                            onTap: (() {
+                              SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]);
+                              SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+                              Future.delayed(const Duration(milliseconds: 500),(){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CounterpicksView(ruleset: defaultRulesets[index])));
+                              });
+                        }),
+                        );
+                    }),)
+                  ),
+                  );
+                }));
+              },
+            )
+          ],),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.brown,
         actions: [
@@ -84,13 +129,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   Row(children: [
                     const Text("Created by "),
                     InkWell(child: const Text("Decade",style: TextStyle(color: Colors.blue),),
-                    onTap: (){launch("https://twitter.com/DecadeSmash");},),
+                    onTap: (){launchUrl(Uri.https("twitter.com", "/DecadeSmash"));},),
                   ],),
                   Row(
                     children: [
                       const Text("Stage images from "),
                       InkWell(child: const Text("Smash Wiki",style: TextStyle(color: Colors.blue),),
-                      onTap: (){launch("https://www.ssbwiki.com");},)
+                      onTap: (){launchUrl(Uri.https("www.ssbwiki.com"));},)
                     ],
                   ),
                 ]
@@ -101,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(Icons.qr_code),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const QrReader())).then((value){
-                Future.delayed(const Duration(milliseconds: 50),(){
+                Future.delayed(const Duration(milliseconds: 100),(){
                   setState(() {
                     rulesetListFuture = ruleset.rulesetList;
                   });
@@ -113,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(Icons.add),
             onPressed: ()async{
               Navigator.push<List<Ruleset>>(context, MaterialPageRoute(builder: (context) => const RulesetCreator())).then((value){
-                Future.delayed(const Duration(milliseconds: 50),(){
+                Future.delayed(const Duration(milliseconds: 100),(){
                   setState(() {
                     rulesetListFuture = ruleset.rulesetList;
                   });
@@ -127,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: FutureBuilder<List<Ruleset>>(
           future: rulesetListFuture,
           builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.done ){
+            if(snapshot.connectionState == ConnectionState.done){
               if(snapshot.data!.isEmpty){
                 return SizedBox(
                   width: (width/8)*7,
@@ -185,7 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: () {
                       SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]);
                       SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-                      Future.delayed(const Duration(milliseconds: 400),(){
+                      Future.delayed(const Duration(milliseconds: 500),(){
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CounterpicksView(ruleset: ruleset)));
                       });
 

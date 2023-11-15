@@ -36,7 +36,7 @@ late TextEditingController _controller;
     double height = MediaQuery.of(context).size.height;
 
     double stageItemHeight = height/6;
-    double stageItemWidth = height/5;
+    double stageItemWidth = width/2;
 
 
     return Scaffold(
@@ -50,7 +50,7 @@ late TextEditingController _controller;
           children: [
             //Enter name
             Card(
-              child: Padding(
+              child: Padding( 
                 padding: const EdgeInsets.all(7),
                 child: TextField(
                   controller: _controller,
@@ -70,7 +70,7 @@ late TextEditingController _controller;
             //Choose Starters
             Card(
               child: SizedBox(
-                height: (stageItemHeight * 4) + 75,
+                height: (stageItemHeight * 5) + (height/7),
                 child: ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: readRuleset.starters.length + 1,
@@ -96,14 +96,6 @@ late TextEditingController _controller;
                                     );
                                   },
                                   );
-                              // showDialog(
-                              //     context: context,
-                              //     builder: (context) => ReloadAccess().starterStagePopup(context, readRuleset,height,width,(ruleset){
-                              //       setState(() {
-                              //         readRuleset = ruleset;
-                              //       });
-                              //     })
-                              // );
                             },
                           ),
                           title: const Text("Starters"),)
@@ -114,9 +106,9 @@ late TextEditingController _controller;
                               child: Row(
                                 children: [
                                   const Spacer(),
-                                  SizedBox(width: stageItemWidth/2,child: Text(element.stageName),),
+                                  SizedBox(width: stageItemWidth/2,height: stageItemHeight, child: Center(child: Text(element.stageName),),),
                                   const Spacer(),
-                                  Image.asset(element.stageImgPath,width: stageItemWidth,),
+                                  Image.asset(element.stageImgPath,height: stageItemHeight,width: stageItemWidth,),
                                   const Padding(padding: EdgeInsets.all(5)),
                                   IconButton(onPressed: (){
                                     setState(() {
@@ -137,7 +129,7 @@ late TextEditingController _controller;
             //Counterpicks
             Card(
                 child: SizedBox(
-                  height: (stageItemHeight * 3) + 75,
+                  height: (stageItemHeight * 3) + (height/7),
                   child: ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: readRuleset.counterpicks.length + 1,
@@ -183,7 +175,7 @@ late TextEditingController _controller;
                                       const Spacer(),
                                       SizedBox(width: stageItemWidth/2,child: Text(element.stageName),),
                                       const Spacer(),
-                                      Image.asset(element.stageImgPath,width: stageItemWidth,),
+                                      Image.asset(element.stageImgPath,height: stageItemHeight,width: stageItemWidth,),
                                       const Padding(padding: EdgeInsets.all(5)),
                                       IconButton(onPressed: (){
                                         setState(() {
@@ -300,7 +292,7 @@ class ReloadAccess{
                 IconButton(onPressed: (){
                   if(ruleset.stageListMap().containsKey(getLegalStage(element).stageName)){
                     showDialog(context: context, builder: (context) => AlertDialog(
-                      insetPadding: EdgeInsets.only(top: width/2,bottom: width/2),
+                      insetPadding: EdgeInsets.only(top: height/4,bottom: height/4),
                       actions: [
                         IconButton(
                             onPressed: (){
@@ -425,7 +417,7 @@ class ReloadAccess{
                 IconButton(onPressed: (){
                   if(ruleset.stageListMap().containsKey(getLegalStage(element).stageName)){
                     showDialog(context: context, builder: (context) => AlertDialog(
-                      insetPadding: EdgeInsets.only(top: width/2,bottom: width/2),
+                      insetPadding: EdgeInsets.only(top: height/4,bottom: height/4),
                       actions: [
                         IconButton(
                             onPressed: (){
