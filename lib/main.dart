@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -12,6 +13,7 @@ import 'package:ultimate_counterpicks/rulesets/classes/ruleset.dart';
 import 'package:ultimate_counterpicks/rulesets/widgets/counterpicks_view.dart';
 import 'package:ultimate_counterpicks/rulesets/widgets/qr_reader.dart';
 import 'package:ultimate_counterpicks/rulesets/widgets/ruleset_creator.dart';
+import 'package:ultimate_counterpicks/web_compatible/scrolling.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:animations/animations.dart';
 
@@ -32,6 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ultimate Counterpicks',
+      scrollBehavior: CustomScrollBehavior(),
       theme: ThemeData(
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: {
@@ -73,100 +76,10 @@ class _MyHomePageState extends State<MyHomePage> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(child: Center(child: Text("Additional Options"),)),
-            ListTile(
-              title: const Text("Default Stagelists"),
-              onTap: () {
-                List<Ruleset> defaultRulesets = DefaultRulesets().rulesets;
-                showDialog(context: context, 
-                builder: ((context) {
-                  return AlertDialog(
-                    actions: [
-                      IconButton(
-                        onPressed: (){
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(Icons.close))
-                        ],
-                    content: SizedBox(
-                      height: height/2,
-                      width: width/2 ,
-                      child: ListView.builder(
-                        itemCount: defaultRulesets.length,
-                        itemBuilder: ((context, index) {
-                          return ListTile(
-                            title: Text(defaultRulesets[index].name),
-                            onTap: (() {
-                              SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]);
-                              SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-                              Future.delayed(const Duration(milliseconds: 500),(){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => CounterpicksView(ruleset: defaultRulesets[index])));
-                              });
-                        }),
-                        );
-                    }),)
-                  ),
-                  );
-                }));
-              },
-            )
-          ],),
-      ),
+      drawer: adaptiveDrawer(context, height, width),
       appBar: AppBar(
         backgroundColor: Colors.brown,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help),
-            onPressed: (){
-              showAboutDialog(
-                context: context,
-                applicationName: "Ultimate Counterpicks",
-                children: [
-                  Row(children: [
-                    const Text("Created by "),
-                    InkWell(child: const Text("Decade",style: TextStyle(color: Colors.blue),),
-                    onTap: (){launchUrl(Uri.https("twitter.com", "/DecadeSmash"));},),
-                  ],),
-                  Row(
-                    children: [
-                      const Text("Stage images from "),
-                      InkWell(child: const Text("Smash Wiki",style: TextStyle(color: Colors.blue),),
-                      onTap: (){launchUrl(Uri.https("www.ssbwiki.com"));},)
-                    ],
-                  ),
-                ]
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.qr_code),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const QrReader())).then((value){
-                Future.delayed(const Duration(milliseconds: 100),(){
-                  setState(() {
-                    rulesetListFuture = ruleset.rulesetList;
-                  });
-                });
-              });
-            }
-          ),
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: ()async{
-              Navigator.push<List<Ruleset>>(context, MaterialPageRoute(builder: (context) => const RulesetCreator())).then((value){
-                Future.delayed(const Duration(milliseconds: 100),(){
-                  setState(() {
-                    rulesetListFuture = ruleset.rulesetList;
-                  });
-                });
-              });
-            },
-          ),
-        ],
+        actions: adaptiveAppBarActions(context),
       ),
       body: Center(
         child: FutureBuilder<List<Ruleset>>(
@@ -189,43 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     title: Text(title),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: (){
-                            Future.delayed(Duration.zero,(){
-                              ruleset.deleteRuleset(index);
-                              ruleset.renameRulesets;
-                              setState(() {
-                                rulesetListFuture = ruleset.rulesetList;
-                              });
-                            });
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.qr_code),
-                          onPressed: (){
-                            showDialog(context: context, builder: (context) => AlertDialog(
-                              content: SizedBox(
-                                  height: (width/4) * 3,
-                                  width: (width/4) * 3,
-                                  child: QrImageView(
-                                    data: jsonEncode(ruleset),
-                                    version: QrVersions.auto,
-                                  ),
-                              ),
-                              actions: [
-                                IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                )
-                              ],
-                            ));
-                          },
-                        )
-                      ],
+                      children: adaptiveListTileIcons(ruleset, index, context, width),
                     ),
                     onTap: () {
                       SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]);
@@ -245,6 +122,186 @@ class _MyHomePageState extends State<MyHomePage> {
     },),
       ),
     );
+  }
+
+  List<Widget> adaptiveAppBarActions(BuildContext context) {
+    if(kIsWeb){
+      return [        
+        IconButton(
+          icon: const Icon(Icons.help),
+          onPressed: (){
+            showAboutDialog(
+              context: context,
+              applicationName: "Ultimate Counterpicks",
+              children: [
+                Row(children: [
+                  const Text("Created by "),
+                  InkWell(child: const Text("Decade",style: TextStyle(color: Colors.blue),),
+                  onTap: (){launchUrl(Uri.https("twitter.com", "/DecadeSmash"));},),
+                ],),
+                Row(
+                  children: [
+                    const Text("Stage images from "),
+                    InkWell(child: const Text("Smash Wiki",style: TextStyle(color: Colors.blue),),
+                    onTap: (){launchUrl(Uri.https("www.ssbwiki.com"));},)
+                  ],
+                ),
+                const Wrap(
+                  children: [
+                    Text("For saving custom rulesets and many other offline features please download the app on Google Play or the Apple App Store")
+                  ],
+                )
+              ]
+            );
+          },
+        ),];
+    }
+    return [
+        IconButton(
+          icon: const Icon(Icons.help),
+          onPressed: (){
+            showAboutDialog(
+              context: context,
+              applicationName: "Ultimate Counterpicks",
+              children: [
+                Row(children: [
+                  const Text("Created by "),
+                  InkWell(child: const Text("Decade",style: TextStyle(color: Colors.blue),),
+                  onTap: (){launchUrl(Uri.https("twitter.com", "/DecadeSmash"));},),
+                ],),
+                Row(
+                  children: [
+                    const Text("Stage images from "),
+                    InkWell(child: const Text("Smash Wiki",style: TextStyle(color: Colors.blue),),
+                    onTap: (){launchUrl(Uri.https("www.ssbwiki.com"));},)
+                  ],
+                ),
+              ]
+            );
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.qr_code),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const QrReader())).then((value){
+              Future.delayed(const Duration(milliseconds: 100),(){
+                setState(() {
+                  rulesetListFuture = ruleset.rulesetList;
+                });
+              });
+            });
+          }
+        ),
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: ()async{
+            Navigator.push<List<Ruleset>>(context, MaterialPageRoute(builder: (context) => const RulesetCreator())).then((value){
+              Future.delayed(const Duration(milliseconds: 100),(){
+                setState(() {
+                  rulesetListFuture = ruleset.rulesetList;
+                });
+              });
+            });
+          },
+        ),
+      ];
+  }
+
+  Drawer? adaptiveDrawer(BuildContext context, double height, double width) {
+    if(kIsWeb){
+      return null;
+    }
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          const DrawerHeader(child: Center(child: Text("Additional Options"),)),
+          ListTile(
+            title: const Text("Default Stagelists"),
+            onTap: () {
+              List<Ruleset> defaultRulesets = DefaultRulesets().rulesets;
+              showDialog(context: context, 
+              builder: ((context) {
+                return AlertDialog(
+                  actions: [
+                    IconButton(
+                      onPressed: (){
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(Icons.close))
+                      ],
+                  content: SizedBox(
+                    height: height/2,
+                    width: width/2 ,
+                    child: ListView.builder(
+                      itemCount: defaultRulesets.length,
+                      itemBuilder: ((context, index) {
+                        return ListTile(
+                          title: Text(defaultRulesets[index].name),
+                          onTap: (() {
+                            SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]);
+                            SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+                            Future.delayed(const Duration(milliseconds: 500),(){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => CounterpicksView(ruleset: defaultRulesets[index])));
+                            });
+                      }),
+                      );
+                  }),)
+                ),
+                );
+              }));
+            },
+          )
+        ],),
+    );
+  }
+
+  List<Widget> adaptiveListTileIcons(Ruleset ruleset, int index, BuildContext context, double width) {
+    if(kIsWeb == false){
+          return [
+                      // listOptionalDeleteButton(ruleset, index),
+                      IconButton(
+                        icon: const Icon(Icons.qr_code),
+                        onPressed: (){
+                          showDialog(context: context, builder: (context) => AlertDialog(
+                            content: SizedBox(
+                                height: (width/4) * 3,
+                                width: (width/4) * 3,
+                                child: QrImageView(
+                                  data: jsonEncode(ruleset),
+                                  version: QrVersions.auto,
+                                ),
+                            ),
+                            actions: [
+                              IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              )
+                            ],
+                          ));
+                        },
+                      )
+                    ];
+    }else{
+      return [];
+    }
+  }
+
+  IconButton listOptionalDeleteButton(Ruleset ruleset, int index) {
+    return IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: (){
+                          Future.delayed(Duration.zero,(){
+                            ruleset.deleteRuleset(index);
+                            ruleset.renameRulesets;
+                            setState(() {
+                              rulesetListFuture = ruleset.rulesetList;
+                            });
+                          });
+                        },
+                      );
   }
 }
 

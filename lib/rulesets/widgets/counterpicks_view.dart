@@ -88,7 +88,7 @@ class _CounterpicksViewState extends State<CounterpicksView> {
                   child: GridView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: starters.length,
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: starterStageWidth,childAspectRatio: 0.6),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: starterStageWidth,childAspectRatio: 0.65),
                       itemBuilder: (context, index) {
                         if (starters[index].isBanned) {
                           return Column(

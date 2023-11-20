@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:ultimate_counterpicks/lists/default_rulesets.dart';
 
 import 'package:ultimate_counterpicks/rulesets/classes/stage.dart';
 import 'legality.dart';
@@ -149,6 +151,9 @@ Future<Ruleset> readIndexRuleset(int index) async{
 //  }
 
   Future<List<Ruleset>> get rulesetList async{
+    if(kIsWeb){
+      return DefaultRulesets().rulesets;
+    }
     final String dirString = await _rulesetDocumentDirectory;
     final Directory dir = Directory(dirString);
     List<Ruleset> data = [];
