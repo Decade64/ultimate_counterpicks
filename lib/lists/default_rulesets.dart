@@ -1,6 +1,6 @@
-import 'package:ultimate_counterpicks/lists/stages.dart';
-import 'package:ultimate_counterpicks/rulesets/classes/legality.dart';
-import 'package:ultimate_counterpicks/rulesets/classes/ruleset.dart';
+import 'package:stagelistgg/lists/stages.dart';
+import 'package:stagelistgg/rulesets/classes/legality.dart';
+import 'package:stagelistgg/rulesets/classes/ruleset.dart';
 
 class DefaultRulesets {
   List<Ruleset> rulesets = [

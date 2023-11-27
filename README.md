@@ -1,4 +1,4 @@
-# ultimate_counterpicks
+# stagelistgg
 
 An app that simplifies the stage ban process for competitive Super Smash Brothers Ultimate
 

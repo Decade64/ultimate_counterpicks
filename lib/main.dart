@@ -5,15 +5,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:ultimate_counterpicks/lists/default_rulesets.dart';
+import 'package:stagelistgg/lists/default_rulesets.dart';
 
 
-import 'package:ultimate_counterpicks/rulesets/classes/legality.dart';
-import 'package:ultimate_counterpicks/rulesets/classes/ruleset.dart';
-import 'package:ultimate_counterpicks/rulesets/widgets/counterpicks_view.dart';
-import 'package:ultimate_counterpicks/rulesets/widgets/qr_reader.dart';
-import 'package:ultimate_counterpicks/rulesets/widgets/ruleset_creator.dart';
-import 'package:ultimate_counterpicks/web_compatible/scrolling.dart';
+import 'package:stagelistgg/rulesets/classes/legality.dart';
+import 'package:stagelistgg/rulesets/classes/ruleset.dart';
+import 'package:stagelistgg/rulesets/widgets/counterpicks_view.dart';
+import 'package:stagelistgg/rulesets/widgets/qr_reader.dart';
+import 'package:stagelistgg/rulesets/widgets/ruleset_creator.dart';
+import 'package:stagelistgg/web_compatible/scrolling.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:animations/animations.dart';
 
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ultimate Counterpicks',
+      title: 'stagelist.gg',
       scrollBehavior: CustomScrollBehavior(),
       theme: ThemeData(
         pageTransitionsTheme: const PageTransitionsTheme(
@@ -132,18 +132,26 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: (){
             showAboutDialog(
               context: context,
-              applicationName: "Ultimate Counterpicks",
+              applicationName: "stagelist.gg",
               children: [
-                Row(children: [
+                Wrap(
+                  children: [
+                                    Row(children: [
                   const Text("Created by "),
                   InkWell(child: const Text("Decade",style: TextStyle(color: Colors.blue),),
                   onTap: (){launchUrl(Uri.https("twitter.com", "/DecadeSmash"));},),
-                ],),
-                Row(
+                ],)
+                  ],
+                ),
+                Wrap(
                   children: [
-                    const Text("Stage images from "),
-                    InkWell(child: const Text("Smash Wiki",style: TextStyle(color: Colors.blue),),
-                    onTap: (){launchUrl(Uri.https("www.ssbwiki.com"));},)
+                    Row(
+                    children: [
+                      const Text("Stage images from "),
+                      InkWell(child: const Text("Smash Wiki",style: TextStyle(color: Colors.blue),),
+                      onTap: (){launchUrl(Uri.https("www.ssbwiki.com"));},)
+                    ],
+                )
                   ],
                 ),
                 const Wrap(
@@ -162,14 +170,14 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: (){
             showAboutDialog(
               context: context,
-              applicationName: "Ultimate Counterpicks",
+              applicationName: "stagelist.gg",
               children: [
                 Row(children: [
                   const Text("Created by "),
                   InkWell(child: const Text("Decade",style: TextStyle(color: Colors.blue),),
                   onTap: (){launchUrl(Uri.https("twitter.com", "/DecadeSmash"));},),
                 ],),
-                Row(
+                Wrap(
                   children: [
                     const Text("Stage images from "),
                     InkWell(child: const Text("Smash Wiki",style: TextStyle(color: Colors.blue),),
@@ -282,7 +290,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             ],
                           ));
                         },
-                      )
+                      ),
+                      listOptionalDeleteButton(ruleset, index)
                     ];
     }else{
       return [];

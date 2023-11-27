@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:ultimate_counterpicks/lists/default_rulesets.dart';
+import 'package:stagelistgg/lists/default_rulesets.dart';
 
-import 'package:ultimate_counterpicks/rulesets/classes/stage.dart';
+import 'package:stagelistgg/rulesets/classes/stage.dart';
 import 'legality.dart';
 
 

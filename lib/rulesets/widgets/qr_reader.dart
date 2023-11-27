@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:ultimate_counterpicks/main.dart';
-import 'package:ultimate_counterpicks/rulesets/classes/ruleset.dart';
+import 'package:stagelistgg/main.dart';
+import 'package:stagelistgg/rulesets/classes/ruleset.dart';
 
 class QrReader extends StatefulWidget{
   const QrReader({Key? key}) : super(key: key);

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:ultimate_counterpicks/rulesets/classes/ruleset.dart';
+import 'package:stagelistgg/rulesets/classes/ruleset.dart';
 import 'package:flutter/services.dart';
 import '../classes/stage.dart';
 

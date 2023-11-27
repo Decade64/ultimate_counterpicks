@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ultimate_counterpicks/lists/stages.dart';
-import 'package:ultimate_counterpicks/main.dart';
-import 'package:ultimate_counterpicks/rulesets/classes/ruleset.dart';
+import 'package:stagelistgg/lists/stages.dart';
+import 'package:stagelistgg/main.dart';
+import 'package:stagelistgg/rulesets/classes/ruleset.dart';
 
 import '../classes/legality.dart';
 

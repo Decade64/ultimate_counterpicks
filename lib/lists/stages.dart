@@ -1,4 +1,4 @@
-import 'package:ultimate_counterpicks/rulesets/classes/legality.dart';
+import 'package:stagelistgg/rulesets/classes/legality.dart';
 
 import '../rulesets/classes/stage.dart';
 
